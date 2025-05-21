@@ -34,7 +34,7 @@ app.use("/api", indexRoutes);
 const authRoutes = require("./routes/auth.routes");
 app.use("/auth", authRoutes);
 
-
+app.use("/api", require("./routes/user.routes"))
 app.use("/api", require("./routes/film.routes"));
 app.use("/api", require("./routes/event.routes"));
 
