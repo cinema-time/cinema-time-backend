@@ -13,11 +13,11 @@ const eventsSchema = new Schema({
     ref: "User", 
     required: true,
   },
-  participants: [{
+  participants: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", 
     required: true,
-  }],
+  },
 });
 
 const Event = mongoose.model("Event", eventsSchema);
