@@ -30,7 +30,7 @@ router.post("/film", (req, res) => {
 });
 
 
-router.get("/api/film/:filmId", (req, res) => {
+router.get("/film/:filmId", (req, res) => {
   const { filmId } = req.params;
   Film.findById(filmId)
     .then((film) => {
