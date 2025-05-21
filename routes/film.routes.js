@@ -46,7 +46,7 @@ router.get("/film/:filmId", (req, res) => {
 
 
 
-/*router.put("/film/:filmId", (req, res) => {
+router.put("/film/:filmId", (req, res) => {
   const { filmId } = req.params;
   const newDetails = req.body;
 
@@ -58,6 +58,6 @@ router.get("/film/:filmId", (req, res) => {
       console.log("There was an error updating the film", error);
       res.status(500).json({ message: "Failed to update specific film" });
     });
-});*/
+});
 
 module.exports = router
