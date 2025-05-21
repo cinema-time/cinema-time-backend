@@ -20,7 +20,7 @@ router.get("/events", (req, res, next) => {
 router.get('/events/:eventId', (req, res) => {
   const { eventId } = req.params;
   Event.findById(eventId)
-    .populate('createdBy participants movieSuggestions snacks')
+    .populate('createdBy participants')
     .then(event => {
       if (!event) {
         return res.status(404).json({ error: 'Event not found' });
