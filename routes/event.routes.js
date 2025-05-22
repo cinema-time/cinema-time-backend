@@ -18,7 +18,7 @@ router.get("/events", isAuthenticated, (req, res, next) => {
 
 
 
-router.get('/events/:eventId', (req, res) => {
+router.get('/events/:eventId',isAuthenticated, (req, res) => {
   const { eventId } = req.params;
   Event.findById(eventId)
     .populate('createdBy participants')
@@ -36,7 +36,7 @@ router.get('/events/:eventId', (req, res) => {
 
 
 
-router.put("/events/:eventId", (req, res) => {
+router.put("/events/:eventId",isAuthenticated, (req, res) => {
   const { eventId } = req.params;
   const newDetails = req.body;
 
@@ -70,7 +70,7 @@ router.post('/events', isAuthenticated, (req, res) => {
 
 
 
-router.delete('/events/:eventId', (req, res) => {
+router.delete('/events/:eventId',isAuthenticated, (req, res) => {
   const { eventId } = req.params;
   Event.findByIdAndDelete(eventId)
     .then(deletedEvent => {
