@@ -1,9 +1,10 @@
 const router = require('express').Router();
 
+const { isAuthenticated } = require('../middleware/jwt.middleware');
 const Event = require("../models/Events.model")
 
 
-router.get("/events", (req, res, next) => {
+router.get("/events", isAuthenticated, (req, res, next) => {
   Event.find({})
     .then((events) => {
       console.log("Retrieved events ->", events);
