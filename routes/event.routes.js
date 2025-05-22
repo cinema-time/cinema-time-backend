@@ -50,8 +50,14 @@ router.put("/events/:eventId", (req, res) => {
     });
 });
 
-router.post('/events', (req, res) => {
-  const newEvent = req.body;
+router.post('/events', isAuthenticated, (req, res) => {
+  const {title, description, date} = req.body;
+  const newEvent = {
+    title,
+    description,
+    date,
+    createdBy: req.payload._id
+  }
   Event.create(newEvent)
     .then(createdEvent => {
       res.status(201).json(createdEvent);
