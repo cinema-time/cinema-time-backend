@@ -1,10 +1,12 @@
 const router = require('express').Router();
 
+const { isAuthenticated } = require('../middleware/jwt.middleware');
 const User = require("../models/User.model");
 
 
 router.get("/users", (req, res, next) => {
   User.find({})
+    .select('name _id')
     .then((users) => {
       console.log("Retrieved users ->", users);
       res.json(users);
@@ -17,7 +19,7 @@ router.get("/users", (req, res, next) => {
 
 
 
-router.get('/users/:userId', (req, res) => {
+/*router.get('/users/:userId', (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
     .populate('createdBy participants')
@@ -31,11 +33,11 @@ router.get('/users/:userId', (req, res) => {
       console.error('Error retrieving specific event:', error);
       res.status(500).json({ error: 'Failed to retrieve the event' });
     });
-});
+});*/
 
 
 
-router.put("/users/:userId", (req, res) => {
+/*router.put("/users/:userId", isAuthenticated, (req, res) => {
   const { userId } = req.params;
   const newDetails = req.body;
 
@@ -47,33 +49,9 @@ router.put("/users/:userId", (req, res) => {
       console.log("There was an error updating the user", error);
       res.status(500).json({ message: "Failed to update specific user" });
     });
-});
-
-router.post('/users', (req, res) => {
-  const newUser = req.body;
-  User.create(newUser)
-    .then(createdUser => {
-      res.status(201).json(createdUser);
-    })
-    .catch(error => {
-      console.error('Error creating user:', error);
-      res.status(500).json({ error: 'Failed to create the user' });
-    });
-});
+});*/
 
 
-
-router.delete('/users/:userId', (req, res) => {
-  const { userId } = req.params;
-  User.findByIdAndDelete(userId)
-    .then(deletedUser => {
-      res.status(200).json(deletedUser);
-    })
-    .catch(error => {
-      console.error('Error deleting user:', error);
-      res.status(500).json({ error: 'Failed to delete the user' });
-    });
-});
 
 
 module.exports = router;

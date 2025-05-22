@@ -51,12 +51,14 @@ router.put("/events/:eventId",isAuthenticated, (req, res) => {
 });
 
 router.post('/events', isAuthenticated, (req, res) => {
-  const {title, description, date} = req.body;
+  const {title, description, date, participants} = req.body;
   const newEvent = {
     title,
     description,
     date,
-    createdBy: req.payload._id
+    location,
+    createdBy: req.payload._id,
+    participants,
   }
   Event.create(newEvent)
     .then(createdEvent => {
