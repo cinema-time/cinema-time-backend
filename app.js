@@ -5,7 +5,8 @@ require("dotenv").config();
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-
+const eventRoutes = require("./routes/event.routes");
+const {isAuthenticated} = require("../cinema-time-backend/middleware/jwt.middleware")
 
 
 // ℹ️ Connects to the database
@@ -33,10 +34,13 @@ app.use("/api", indexRoutes);
 
 const authRoutes = require("./routes/auth.routes");
 app.use("/auth", authRoutes);
-
+app.use('/uploads', express.static('uploads'));
 app.use("/api", require("./routes/user.routes"))
 app.use("/api", require("./routes/film.routes"));
 app.use("/api", require("./routes/event.routes"));
+
+
+app.use("/api/events", isAuthenticated, eventRoutes);
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);

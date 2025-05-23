@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const User = require("./User.model"); 
 
+
 const eventsSchema = new Schema({
   title: String,
   description: String,
