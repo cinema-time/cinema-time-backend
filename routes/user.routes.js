@@ -1,12 +1,11 @@
-const router = require('express').Router();
+const router = require("express").Router();
 
-const { isAuthenticated } = require('../middleware/jwt.middleware');
+const { isAuthenticated } = require("../middleware/jwt.middleware");
 const User = require("../models/User.model");
-
 
 router.get("/users", (req, res, next) => {
   User.find({})
-    .select('name _id')
+    .select("name _id")
     .then((users) => {
       console.log("Retrieved users ->", users);
       res.json(users);
@@ -17,48 +16,21 @@ router.get("/users", (req, res, next) => {
     });
 });
 
+router.get("/users/my-profile", isAuthenticated, (req, res) => {
+  const userId = req.payload._id;
 
-
-/*router.get('/users/:userId', (req, res) => {
-  const { userId } = req.params;
   User.findById(userId)
-    .populate('createdBy participants')
-    .then(event => {
-      if (!event) {
-        return res.status(404).json({ error: 'Event not found' });
+    .select("name _id email")
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
       }
-      res.status(200).json(event);
-    })
-    .catch(error => {
-      console.error('Error retrieving specific event:', error);
-      res.status(500).json({ error: 'Failed to retrieve the event' });
-    });
-});*/
-
-
-
-/*router.put("/users/:userId", isAuthenticated, (req, res) => {
-  const { userId } = req.params;
-  const newDetails = req.body;
-
-  User.findByIdAndUpdate(userId, newDetails, { new: true })
-    .then((event) => {
-      res.status(200).json(event);
+      res.status(200).json(user);
     })
     .catch((error) => {
-      console.log("There was an error updating the user", error);
-      res.status(500).json({ message: "Failed to update specific user" });
+      console.error("Error retrieving user profile:", error);
+      res.status(500).json({ error: "Failed to retrieve the user profile" });
     });
-});*/
-
-
-
+});
 
 module.exports = router;
-
-
-
-
-
-
-
