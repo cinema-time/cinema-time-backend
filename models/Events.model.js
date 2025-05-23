@@ -18,7 +18,7 @@ const eventsSchema = new Schema({
     ref: "User", 
     required: true,
   }],
-});
+}, {timestamps: true});
 
 const Event = mongoose.model("Event", eventsSchema);
 

@@ -5,7 +5,7 @@ const Event = require("../models/Events.model")
 
 
 router.get("/events", isAuthenticated, (req, res, next) => {
-  Event.find({})
+  Event.find({}).sort({ createdAt: -1})
     .then((events) => {
       console.log("Retrieved events ->", events);
       res.json(events);
