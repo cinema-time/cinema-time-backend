@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const User = require("./User.model"); 
+const Film = require("./Film.models"); // Adjust path accordingly
 
 
 const eventsSchema = new Schema({
@@ -9,6 +10,10 @@ const eventsSchema = new Schema({
   date: Date,
   location: String,
   imageUrl: String,
+ film: {  
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Film",
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", 

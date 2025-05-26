@@ -2,12 +2,12 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const Event = require("../models/Events.model");
-const User = require("../models/User.model");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
 const path = require("path");
 const fs = require("fs");
+const Film = require("../models/Film.models");
 
-// Configure Multer for file uploads
+// Multer storage config
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadPath = path.join(__dirname, "../uploads");
@@ -24,35 +24,38 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get("/events", isAuthenticated, (req, res, next) => {
-	Event.find({})
-		.sort({ createdAt: -1 })
-		.then((events) => {
-			console.log("Retrieved events ->", events);
-			res.json(events);
-		})
-		.catch((error) => {
-			console.error("Error while retrieving events ->", error);
-			res.status(500).json({ error: "Failed to retrieve events" });
-		});
+// GET all events
+router.get("/events", isAuthenticated, (req, res) => {
+  Event.find({})
+    .sort({ createdAt: -1 })
+    .populate("film", "title") 
+    .then((events) => {
+      res.json(events);
+    })
+    .catch((error) => {
+      console.error("Error while retrieving events ->", error);
+      res.status(500).json({ error: "Failed to retrieve events" });
+    });
 });
 
+// GET specific event by ID, populate createdBy, participants, and film
 router.get("/events/:eventId", isAuthenticated, (req, res) => {
-	const { eventId } = req.params;
-	Event.findById(eventId)
-		.populate("createdBy participants")
-		.then((event) => {
-			if (!event) {
-				return res.status(404).json({ error: "Event not found" });
-			}
-			res.status(200).json(event);
-		})
-		.catch((error) => {
-			console.error("Error retrieving specific event:", error);
-			res.status(500).json({ error: "Failed to retrieve the event" });
-		});
+  const { eventId } = req.params;
+  Event.findById(eventId)
+    .populate("createdBy participants film") // <-- note singular "film"
+    .then((event) => {
+      if (!event) {
+        return res.status(404).json({ error: "Event not found" });
+      }
+      res.status(200).json(event);
+    })
+    .catch((error) => {
+      console.error("Error retrieving specific event:", error);
+      res.status(500).json({ error: "Failed to retrieve the event" });
+    });
 });
 
+// UPDATE event
 router.put("/events/:eventId", isAuthenticated, upload.single("image"), (req, res) => {
   const { eventId } = req.params;
   const newDetails = req.body;
@@ -62,12 +65,21 @@ router.put("/events/:eventId", isAuthenticated, upload.single("image"), (req, re
     newDetails.imageUrl = `/uploads/${req.file.filename}`;
   }
 
-  // If participants is sent as stringified JSON, parse it
+  // Parse participants if sent as JSON string
   if (typeof newDetails.participants === "string") {
     try {
       newDetails.participants = JSON.parse(newDetails.participants);
     } catch (e) {
-      // handle error or keep as string
+      // leave as is or handle error
+    }
+  }
+
+  // Parse film if sent as JSON string (single ObjectId expected)
+  if (typeof newDetails.film === "string") {
+    try {
+      newDetails.film = JSON.parse(newDetails.film);
+    } catch (e) {
+      // leave as is or handle error
     }
   }
 
@@ -82,9 +94,10 @@ router.put("/events/:eventId", isAuthenticated, upload.single("image"), (req, re
     });
 });
 
+// CREATE event
 router.post("/events", isAuthenticated, upload.single("image"), async (req, res) => {
   try {
-    const { title, description, date, location, participants } = req.body;
+    const { title, description, date, location, participants, film } = req.body;
 
     const newEvent = {
       title,
@@ -93,29 +106,30 @@ router.post("/events", isAuthenticated, upload.single("image"), async (req, res)
       location,
       createdBy: req.payload._id,
       participants: JSON.parse(participants),
+      film: film || null, // parse film ID if sent as JSON string
       imageUrl: req.file ? `/uploads/${req.file.filename}` : null,
     };
 
-    // Save to DB (assuming you have a model)
     const createdEvent = await Event.create(newEvent);
 
-    return res.status(201).json(newEvent);
+    return res.status(201).json(createdEvent);
   } catch (err) {
     console.error("Error creating event:", err);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
+// DELETE event
 router.delete("/events/:eventId", isAuthenticated, (req, res) => {
-	const { eventId } = req.params;
-	Event.findByIdAndDelete(eventId)
-		.then((deletedEvent) => {
-			res.status(200).json(deletedEvent);
-		})
-		.catch((error) => {
-			console.error("Error deleting event:", error);
-			res.status(500).json({ error: "Failed to delete the event" });
-		});
+  const { eventId } = req.params;
+  Event.findByIdAndDelete(eventId)
+    .then((deletedEvent) => {
+      res.status(200).json(deletedEvent);
+    })
+    .catch((error) => {
+      console.error("Error deleting event:", error);
+      res.status(500).json({ error: "Failed to delete the event" });
+    });
 });
 
 module.exports = router;

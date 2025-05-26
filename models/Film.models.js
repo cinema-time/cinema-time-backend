@@ -12,6 +12,6 @@ const filmSchema = new Schema({
   iMDB:String
 })
 
-const Film = mongoose.model("film", filmSchema);
+const Film = mongoose.model("Film", filmSchema);
 
 module.exports = Film;
