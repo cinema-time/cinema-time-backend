@@ -9,7 +9,13 @@ const filmSchema = new Schema({
   director: String,
   year: Number,
   genre: String,
-  iMDB:String
+  iMDB:String,
+  rating: {
+    type: Number,
+    min: 1,
+    max: 10,
+    default: 5 
+  }
 })
 
 const Film = mongoose.model("Film", filmSchema);
