@@ -25,7 +25,12 @@ app.use(cookieParser());
 
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
 require("./config")(app);
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://cinema-time.netlify.app"],
+    credentials: true,
+  })
+);
 
 
 // 👇 Start handling routes here
