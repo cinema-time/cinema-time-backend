@@ -32,6 +32,10 @@ app.use(cors({ origin: "http://localhost:5173" }));
 const indexRoutes = require("./routes/index.routes");
 app.use("/api", indexRoutes);
 
+/*const allRoutes = require("./routes");
+app.use("/api", allRoutes);*/
+
+
 const authRoutes = require("./routes/auth.routes");
 app.use("/auth", authRoutes);
 app.use('/uploads', express.static('uploads'));
