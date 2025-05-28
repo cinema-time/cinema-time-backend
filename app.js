@@ -18,6 +18,14 @@ const express = require("express");
 
 const app = express();
 
+
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://cinema-time.netlify.app"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.static("public"));
@@ -25,12 +33,7 @@ app.use(cookieParser());
 
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
 require("./config")(app);
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "https://cinema-time.netlify.app"],
-    credentials: true,
-  })
-);
+
 
 
 // 👇 Start handling routes here
