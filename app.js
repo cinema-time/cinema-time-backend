@@ -6,7 +6,7 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const eventRoutes = require("./routes/event.routes");
-const {isAuthenticated} = require("../cinema-time-backend/middleware/jwt.middleware")
+const {isAuthenticated} = require("./jwt.middleware")
 
 
 // ℹ️ Connects to the database

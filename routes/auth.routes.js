@@ -11,7 +11,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User.model");
 
 // Require necessary (isAuthenticated) middleware in order to control access to specific routes
-const { isAuthenticated } = require("../middleware/jwt.middleware.js");
+const { isAuthenticated } = require("../jwt.middleware.js");
 
 // How many rounds should bcrypt run the salt (default - 10 rounds)
 const saltRounds = 10;
