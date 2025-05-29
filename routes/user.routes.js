@@ -34,7 +34,7 @@ router.get("/users/my-profile", isAuthenticated, (req, res) => {
 });
 
 
-router.put("/edit-profile", isAuthenticated, async (req, res) => {
+router.put("/users/edit-profile", isAuthenticated, async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
