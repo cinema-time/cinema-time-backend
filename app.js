@@ -47,9 +47,10 @@ app.use("/api", allRoutes);*/
 const authRoutes = require("./routes/auth.routes");
 app.use("/auth", authRoutes);
 app.use('/uploads', express.static('uploads'));
-app.use("/api", require("./routes/user.routes"))
+app.use("/api", require("./routes/user.routes"));
 app.use("/api", require("./routes/film.routes"));
 app.use("/api", require("./routes/event.routes"));
+/*app.use("/api", require("./routes/follower.routes"));*/
 
 
 app.use("/api/events", isAuthenticated, eventRoutes);
