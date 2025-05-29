@@ -28,6 +28,12 @@ const userSchema = new Schema(
         ref: "User",
       },
     ],
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,
