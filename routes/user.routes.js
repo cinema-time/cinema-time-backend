@@ -33,4 +33,29 @@ router.get("/users/my-profile", isAuthenticated, (req, res) => {
     });
 });
 
+
+router.put("/edit-profile", isAuthenticated, async (req, res) => {
+  const { name, email, password } = req.body;
+
+  try {
+    const updatedFields = {};
+    if (name) updatedFields.name = name;
+    if (email) updatedFields.email = email;
+    if (password) updatedFields.password = await bcrypt.hash(password, 10); // only hash if present
+
+    const updatedUser = await User.findByIdAndUpdate(
+     req.payload._id, // ✅ Use `payload` not `user`
+      { $set: updatedFields },
+      { new: true }
+    );
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ message: "Error updating user", error: err.message });
+  }
+});
+
+
+
+
 module.exports = router;
