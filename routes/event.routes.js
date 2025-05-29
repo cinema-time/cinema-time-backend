@@ -3,10 +3,9 @@ const router = express.Router();
 const multer = require("multer");
 const Event = require("../models/Events.model");
 const { isAuthenticated } = require("../jwt.middleware");
+const path = require("path");
 const fs = require("fs");
 const Film = require("../models/Film.models");
-const path = require('path');
-const app = express();
 
 // Multer storage config
 const storage = multer.diskStorage({
@@ -24,12 +23,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
-app.use(express.static(path.join(__dirname, 'http://localhost:5173')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'http://localhost:5173', 'index.html'));
-});
 
 // GET all events
 router.get("/events", isAuthenticated, (req, res) => {
