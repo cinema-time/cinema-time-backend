@@ -3,7 +3,6 @@ const router = express.Router();
 const multer = require("multer");
 const Event = require("../models/Events.model");
 const { isAuthenticated } = require("../jwt.middleware");
-const path = require("path");
 const fs = require("fs");
 const Film = require("../models/Film.models");
 const path = require('path');
